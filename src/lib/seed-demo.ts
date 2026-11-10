@@ -36,9 +36,33 @@ function writeDemoImage(name: string): string {
   return file;
 }
 
-/** Populate sample accounts/items when RADAR_DEMO=1 and the DB is empty. */
+/** True when this DB was filled by the sample seed (for the UI banner). */
+export function isDemoData(db: Database.Database): boolean {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS radar_meta (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    )
+  `);
+  const row = db
+    .prepare(`SELECT value FROM radar_meta WHERE key = 'demo'`)
+    .get() as { value: string } | undefined;
+  return row?.value === "1";
+}
+
+/**
+ * Populate sample accounts/items when the DB has no items.
+ * Set RADAR_DEMO=0 to skip (e.g. on your Mac before the first real scrape).
+ */
 export function seedDemoIfNeeded(db: Database.Database): void {
-  if (process.env.RADAR_DEMO !== "1") return;
+  if (process.env.RADAR_DEMO === "0") return;
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS radar_meta (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    )
+  `);
 
   const row = db.prepare(`SELECT COUNT(*) AS n FROM items`).get() as {
     n: number;
@@ -343,6 +367,11 @@ export function seedDemoIfNeeded(db: Database.Database): void {
         status, finished_at, posts_fetched, items_created, tokens_in, tokens_out
       ) VALUES ('ok', datetime('now'), ?, ?, 1200, 400)`,
     ).run(demos.length, demos.length);
+
+    db.prepare(
+      `INSERT INTO radar_meta (key, value) VALUES ('demo', '1')
+       ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
+    ).run();
   });
 
   tx();

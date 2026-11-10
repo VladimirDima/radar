@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { Nav } from "@/components/Nav";
+import { getDb } from "@/lib/db";
+import { isDemoData } from "@/lib/seed-demo";
 import { lastRun, unseenCount } from "@/lib/queries";
 import "./globals.css";
 
@@ -26,6 +28,7 @@ function formatRunTime(iso: string): string {
 export default function RootLayout({ children }: { children: ReactNode }) {
   const unseen = unseenCount();
   const run = lastRun();
+  const demo = isDemoData(getDb());
 
   return (
     <html lang="en">
@@ -33,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="shell">
           <header className="site-header">
             <h1 className="brand">Radar</h1>
-            {process.env.RADAR_DEMO === "1" ? (
+            {demo ? (
               <p className="demo-banner">Sample data — demo mode</p>
             ) : null}
             <Nav unseen={unseen} />
