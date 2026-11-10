@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import { dbPath } from "./paths";
+import { seedDemoIfNeeded } from "./seed-demo";
 
 let db: Database.Database | null = null;
 
@@ -73,6 +74,8 @@ export function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_items_discovered_at ON items(discovered_at);
     CREATE INDEX IF NOT EXISTS idx_posts_extracted_at ON posts(extracted_at);
   `);
+
+  seedDemoIfNeeded(instance);
 
   db = instance;
   return instance;

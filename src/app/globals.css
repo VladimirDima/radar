@@ -56,6 +56,13 @@ a:hover {
   margin: 0 0 0.45rem;
 }
 
+.demo-banner {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .nav {
   display: flex;
   flex-wrap: wrap;

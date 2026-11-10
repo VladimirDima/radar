@@ -33,6 +33,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="shell">
           <header className="site-header">
             <h1 className="brand">Radar</h1>
+            {process.env.RADAR_DEMO === "1" ? (
+              <p className="demo-banner">Sample data — demo mode</p>
+            ) : null}
             <Nav unseen={unseen} />
             {run ? (
               <p
