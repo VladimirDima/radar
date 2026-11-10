@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Install steps:
+  1. Copy this file to ~/Library/LaunchAgents/com.radar.daily.plist
+  2. Edit WorkingDirectory / the cd path below to your Radar checkout
+  3. launchctl load ~/Library/LaunchAgents/com.radar.daily.plist
+  4. To unload later: launchctl unload ~/Library/LaunchAgents/com.radar.daily.plist
+-->
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.radar.daily</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/zsh</string>
+      <string>-lc</string>
+      <string>cd /PATH/TO/radar &amp;&amp; npm run radar &gt;&gt; data/radar.log 2&gt;&amp;1</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>7</integer>
+      <key>Minute</key>
+      <integer>30</integer>
+    </dict>
+    <key>RunAtLoad</key>
+    <false/>
+  </dict>
+</plist>
